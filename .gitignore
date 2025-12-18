@@ -1,0 +1,10 @@
+.vagrant/
+ssl.crt
+ssl.key
+backups/*
+community
+inventory/host_vars/*/secrets.yml
+inventory/host_vars/*/secrets.example.yml
+*.log
+**/*.retry
+.idea/

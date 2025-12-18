@@ -1,0 +1,50 @@
+---
+# Playbook for the initial setup of a new server before installing main packages.
+
+# AWS ubuntu images generally have a default user (ubuntu) and wont let this be run as root.
+# Use: `ansible-playbook playbooks/setup.yml -e "ansible_user=ubuntu" --limit <server_tag>` if
+# provisioning an EC2 instance for the first time (this only needs to be run once).
+
+# Make the machine ready for basic setup.
+- name: Ensure machine is ready as Ansible host
+  hosts: ofn_servers
+  gather_facts: no
+  remote_user: root
+  tasks:
+    - name: apt update
+      become: yes
+      raw: apt-get update -qq
+      register: apt_update
+      until: apt_update.rc == 0
+      retries: 5
+      delay: 10
+      changed_when: apt_update.rc == 0
+    - name: Install python if missing
+      become: yes
+      raw: test -e /usr/bin/python3 || apt-get install -q --yes python3
+      register: python_install
+      until: python_install.rc == 0
+      retries: 5
+      delay: 10
+      changed_when: python_install.stdout != ""
+
+# Add the default user and ssh keys as root
+- name: set up default_user
+  hosts: ofn_servers
+  remote_user: root
+  roles:
+    - role: default_user
+      become: yes
+      tags: default_user
+
+    - role: ssh_keys
+      become: yes
+      tags: ssh_keys
+
+  tasks:
+    - name: purge outdated nginx packages
+      apt:
+        name: nginx
+        state: absent
+        purge: yes
+      become: yes

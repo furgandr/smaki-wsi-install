@@ -1,0 +1,78 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+
+      - name: Set up Ansible
+        run: |
+          pip install -r requirements.txt
+          bin/setup
+
+      - name: Ansible Lint
+        run: bin/lint
+
+  playbook-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          # Most servers use Ubuntu 20. ~ 2025-10
+          #   ansible all_prod -u openfoodnetwork -a "lsb_release -d"
+          #   - Ubuntu 20: 11 servers
+          #   - Ubuntu 24: 1 server
+          #
+          # But it is no longer supported by GitHub.
+          # - "images:ubuntu/20.04"
+
+          # A dependency tries to install firefox and it fails.
+          # But we don't manage any servers on this version anyway.
+          # We can skip it.
+          # - "images:ubuntu/22.04"
+
+          # Ready for the latest version. Finland and Katuma use this already.
+          - "images:ubuntu/24.04"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+
+      - name: Set up Ansible
+        run: |
+          pip install -r requirements.txt
+          bin/setup
+
+      - name: Cache Ruby binary compiling
+        id: cache-ruby
+        uses: actions/cache@v3
+        with:
+          path: ~/.rbenv
+          key: ${{ runner.os }}-ruby-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ruby-
+            ${{ runner.os }}-
+
+      - name: Reset the firewall for container network access
+        run: sudo nft flush ruleset
+
+      - name: Set up Incus
+        run: |
+          sudo apt-get install --yes incus
+          sudo incus admin init --auto
+          sudo usermod -aG incus-admin "$USER"
+          ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+          sudo su -c "LXC_IMAGE='${{ matrix.image }}' `pwd`/bin/setup-incus" - "$USER"
+
+      - name: Test Playbooks
+        run: ansible-playbook tests/suite.yml --limit lxc

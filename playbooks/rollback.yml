@@ -1,0 +1,10 @@
+---
+
+- hosts: ofn_servers
+  remote_user: "{{ user }}"
+
+  handlers:
+    - import_tasks: ../roles/shared_handlers/handlers/main.yml
+
+  roles:
+    - role: rollback

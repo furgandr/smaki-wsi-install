@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Set up Linux Containers (LXC)
+#
+# If you don't run Linux, you better look at Vagrant to set up virtual machines.
+#
+# But if you run Linux anyway then you can use LXC to run virtual machines on
+# the same kernel instead of creating a full virtual machine.
+#
+# Installation in Debian:
+#
+#   sudo apt install lxd
+#   sudo lxd init
+#   sudo usermod -aG lxd "$USER"
+#   # Restart your user's session to gain the new group privilege.
+#
+# You may also like to look at Lexi to manage your LXC containers:
+#
+#   https://github.com/libre-ops/lexi
+
+set -e
+
+: ${LXC_IMAGE='ubuntu:24.04'}
+
+echo "Launching $LXC_IMAGE container:"
+lxc launch "$LXC_IMAGE" ofn-dev
+
+# The launch can take some time.
+while ! lxc exec ofn-dev -- sh -c 'cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub; do
+  sleep 1
+done
+
+# Allow connection via SSH.
+# Your config could look like this:
+# ```
+# Host ofn-dev.lxc
+#   HostName 127.0.0.1
+#   Port 1122
+#   User root
+#   UserKnownHostsFile /dev/null
+#   StrictHostKeyChecking no
+#   PasswordAuthentication no
+#   LogLevel FATAL
+# ```
+lxc config device add ofn-dev myport1122 proxy listen=tcp:0.0.0.0:1122 connect=tcp:127.0.0.1:22
+
+# Enable browsing the OFN app via https://localhost:1443
+lxc config device add ofn-dev myport1443 proxy listen=tcp:0.0.0.0:1443 connect=tcp:127.0.0.1:443

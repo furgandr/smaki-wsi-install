@@ -1,0 +1,43 @@
+rails_env: "staging"
+
+ssl_certificate: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
+ssl_certificate_key:  "/etc/ssl/private/ssl-cert-snakeoil.key"
+
+# See https://github.com/openfoodfoundation/ofn-install/wiki/Setup for more info
+checkout_zone: Poland
+country_code: PL
+currency: PLN
+locale: pl
+language: pl_PL.UTF-8
+language_packages:
+  - language-pack-pl
+l10n_repo: https://github.com/furgandr/l10n_pl.git
+timezone: Warsaw
+
+developer_email: admin@example.com
+
+users_sysadmin:
+  - "{{ core_devs }}"
+
+# *** Test host configuration ***
+#
+# This is usually set in the host config but it's the same for all local
+# containers.
+domain: localhost
+
+admin_email: ofn@example.com
+mail_domain: example.com
+
+# Add missing vars to emulate secrets.yml
+db_password: 'f00d'
+admin_password: 'ofn123'
+secret_token: '511a3d0fa1551b9fa75a1aef5b47684905c64807963fa2c190272878366365'
+google_maps_api_key: 'xxx'
+google_maps_region: 'PL'
+map_default_latitude: '52.237'
+map_default_longitude: '21.018'
+
+mail_host: 'example.com'
+mail_port: 25
+smtp_username: 'admin'
+smtp_password: 'password'

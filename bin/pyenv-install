@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+python_version="$(cat .python-version)"
+
+# Install python version
+pyenv install --skip-existing
+
+pip install -r requirements.txt
+
