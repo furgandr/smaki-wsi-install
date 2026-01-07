@@ -4,6 +4,8 @@ domain: "192.168.56.4.nip.io"
 host_id: vagrant-local
 rails_env: staging
 
+site_name: "Smaki Wsi Demo Site"
+
 admin_email: kontakt@cyberwise.ch
 
 mail_domain: cyberwise.ch
