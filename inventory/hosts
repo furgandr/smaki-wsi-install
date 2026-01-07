@@ -1,57 +1,52 @@
-# --------------------------------------------------------------
-# 1️⃣ Lokalny Docker / Vagrant / LXC – używane do testów lokalnych
-# --------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Local containers for testing
 
 [vagrant]
-192.168.56.4 ansible_host=127.0.0.1 ansible_port=2222 \
-  ansible_user=vagrant \
-  ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key \
-  ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+192.168.56.4 ansible_host=127.0.0.1 ansible_port=2222 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
 [lxc]
-local_lxc ansible_host=127.0.0.1 ansible_user=root ansible_port=1122 \
-  ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+local_lxc ansible_host=127.0.0.1 ansible_user=root ansible_port=1122 ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
 [lexi]
-local_lexi ansible_host=10.10.100.10 \
-  ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
+local_lexi ansible_host=10.10.100.10 ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR'
 
 [test]
 local_test
 
-# --------------------------------------------------------------
-# 2️⃣ Twoja domena produkcyjna
-# --------------------------------------------------------------
-
-[my_prod]
-smaki-wsi.pl ansible_host=185.72.123.45   # <-- podaj prawdziwy adres IP
-
-# --------------------------------------------------------------
-# 3️⃣ Twoja domena testowa (oddzielny serwer / VM)
-# --------------------------------------------------------------
-
-[my_test]
-staging.smaki-wsi.pl ansible_host=185.72.123.46   # <-- IP testowego serwera
-
-# --------------------------------------------------------------
-# 4️⃣ Grupy nadrzędne (opcjonalnie, ułatwiają wywołania)
-# --------------------------------------------------------------
-
-[local:children]
+[pl:children]
 vagrant
 lxc
 lexi
 test
 
-[my_all:children]
-my_prod
-my_test
+[local:children]
+pl
+
+#------------------------------------------------------------------------------
+# Europe
+
+[europe:children]
+pl_prod
+
+#------------------------------------------------------------------------------
+# Globally managed production servers
+#
+# We deploy weekly releases to these instances.
+# This includes all "basic" instances as listed here: https://docs.google.com/spreadsheets/d/1uHc3Pn-XSi5vJ95YIvWRtRJCbz3nXL5apdBWipmHUYc/edit?gid=0#gid=0
+
+[all_prod:children]
+europe
+
+
+#------------------------------------------------------------------------------
+# Staging Servers
+
+[all_staging:children]
+pl_staging
+
+#------------------------------------------------------------------------------
+# All
+
+[ofn_servers:children]
 local
-
-# --------------------------------------------------------------
-# 5️⃣ Globalne zmienne (dotyczą wszystkich hostów)
-# --------------------------------------------------------------
-
-[all:vars]
-ansible_user=deploy                         # użytkownik SSH, którego używasz
-ansible_ssh_private_key_file=~/.ssh/id_rsa_deploy
+pl

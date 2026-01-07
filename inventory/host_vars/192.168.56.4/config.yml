@@ -4,9 +4,9 @@ domain: "192.168.56.4.nip.io"
 host_id: vagrant-local
 rails_env: staging
 
-admin_email: kontakt@smaki-wsi.pl
+admin_email: kontakt@cyberwise.ch
 
-mail_domain: smaki-wsi.pl
+mail_domain: cyberwise.ch
 
 certbot_domains:
   - 192.168.56.4.nip.io
