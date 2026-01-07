@@ -4,9 +4,9 @@ domain: "192.168.56.4.nip.io"
 host_id: vagrant-local
 rails_env: staging
 
-admin_email: admin@192.168.56.4.nip.io
+admin_email: kontakt@smaki-wsi.pl
 
-mail_domain: 192.168.56.4.nip.io
+mail_domain: smaki-wsi.pl
 
 certbot_domains:
   - 192.168.56.4.nip.io

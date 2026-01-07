@@ -25,8 +25,8 @@ users_sysadmin:
 # containers.
 domain: localhost
 
-admin_email: ofn@example.com
-mail_domain: example.com
+admin_email: kontakt@smaki-wsi.pl
+mail_domain: smaki-wsi.pl
 
 # Add missing vars to emulate secrets.yml
 db_password: 'f00d'
@@ -37,7 +37,7 @@ google_maps_region: 'PL'
 map_default_latitude: '52.237'
 map_default_longitude: '21.018'
 
-mail_host: 'example.com'
+mail_host: 'smaki-wsi.pl'
 mail_port: 25
 smtp_username: 'admin'
 smtp_password: 'password'
