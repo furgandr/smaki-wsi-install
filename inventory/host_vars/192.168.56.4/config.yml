@@ -6,9 +6,9 @@ rails_env: staging
 
 site_name: "Smaki Wsi Demo Site"
 
-admin_email: kontakt@cyberwise.ch
+admin_email: kontakt@smaki-wsi.pl
 
-mail_domain: cyberwise.ch
+mail_domain: smaki-wsi.pl
 
 certbot_domains:
   - 192.168.56.4.nip.io
