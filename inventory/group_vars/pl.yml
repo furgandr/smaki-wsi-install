@@ -9,6 +9,7 @@ checkout_zone: Poland
 country_code: PL
 currency: PLN
 locale: pl
+available_locales: "pl"
 language: pl_PL.UTF-8
 language_packages:
   - language-pack-pl
