@@ -1,3 +1,4 @@
+domain: www.smaki-wsi.pl
 rails_env: "staging"
 
 ssl_certificate: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
@@ -14,7 +15,7 @@ language_packages:
 l10n_repo: https://github.com/furgandr/l10n_pl.git
 timezone: Warsaw
 
-developer_email: kontakt@cyberwise.ch
+developer_email: kontakt@smaki-wsi.pl
 
 users_sysadmin:
   - "{{ core_devs }}"
@@ -25,8 +26,8 @@ users_sysadmin:
 # containers.
 domain: localhost
 
-admin_email: kontakt@cyberwise.ch
-mail_domain: cyberwise.ch
+admin_email: kontakt@smaki-wsi.pl
+mail_domain: smaki-wsi.pl
 
 # Add missing vars to emulate secrets.yml
 db_password: 'f00d'
@@ -37,7 +38,7 @@ google_maps_region: 'PL'
 map_default_latitude: '52.237'
 map_default_longitude: '21.018'
 
-mail_host: 'cyberwise.ch'
+mail_host: 'smaki-wsi.pl'
 mail_port: 25
 smtp_username: 'admin'
 smtp_password: 'password'
