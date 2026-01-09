@@ -5,9 +5,6 @@
         },
         {
             "path": "../smaki-wsi-core"
-        },
-        {
-            "path": "../l10n_pl"
         }
     ]
 }
