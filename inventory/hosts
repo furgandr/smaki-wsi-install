@@ -26,7 +26,7 @@ pl
 # Europe
 
 [europe:children]
-pl_prod
+pl
 
 #------------------------------------------------------------------------------
 # Globally managed production servers
@@ -42,7 +42,7 @@ europe
 # Staging Servers
 
 [all_staging:children]
-pl_staging
+pl
 
 #------------------------------------------------------------------------------
 # All
