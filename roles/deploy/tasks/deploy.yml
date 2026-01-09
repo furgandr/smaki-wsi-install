@@ -120,6 +120,48 @@
     - rake
     - skip_ansible_lint
 
+- name: validate Polish locale YAML
+  command: bash -lc "ruby -e \"require 'yaml'; YAML.safe_load_file('config/locales/pl.yml')\""
+  args:
+    chdir: "{{ build_path }}"
+  register: pl_locale_check
+  changed_when: false
+  failed_when: false
+  tags:
+    - rake
+    - skip_ansible_lint
+
+- name: normalize Polish locale encoding if invalid
+  command: bash -lc "iconv -f WINDOWS-1250 -t UTF-8 config/locales/pl.yml -o config/locales/pl.yml"
+  args:
+    chdir: "{{ build_path }}"
+  when: pl_locale_check.rc != 0
+  register: pl_locale_fix
+  changed_when: pl_locale_fix.rc == 0
+  tags:
+    - rake
+    - skip_ansible_lint
+
+- name: recheck Polish locale YAML
+  command: bash -lc "ruby -e \"require 'yaml'; YAML.safe_load_file('config/locales/pl.yml')\""
+  args:
+    chdir: "{{ build_path }}"
+  when: pl_locale_check.rc != 0
+  register: pl_locale_recheck
+  changed_when: false
+  failed_when: false
+  tags:
+    - rake
+    - skip_ansible_lint
+
+- name: fail when Polish locale YAML is invalid
+  fail:
+    msg: "Invalid YAML in config/locales/pl.yml after normalization. Please check encoding and indentation."
+  when: pl_locale_check.rc != 0 and pl_locale_recheck.rc != 0
+  tags:
+    - rake
+    - skip_ansible_lint
+
 - name: clear transient data
   command: bash -lc "bundle exec rake ofn:data:remove_transient_data RAILS_ENV={{ rails_env }}"
   args:
